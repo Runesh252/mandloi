@@ -1,0 +1,25 @@
+नाम: सीआई
+
+चालू: [पुश, वर्कफ़्लो_डिस्पैच]
+
+नौकरियां:
+  निर्माण:
+
+    रन-ऑन: विंडोज़-नवीनतम
+
+    कदम:
+    - नाम: डाउनलोड करें
+      चलाएँ: Invoke-WebRequest https://bin.equinox.io/c/4VmDzA7iaHb/ngrok-stable-windows-amd64.zip -OutFile ngrok.zip
+    - नाम: निकालें
+      रन: एक्सपैंड-आर्काइव ngrok.zip
+    - नाम: Auth
+      रन: .\ngrok\ngrok.exe authtoken $Env:NGROK_AUTH_TOKEN
+      पर्यावरण:
+        NGROK_AUTH_TOKEN: ${{ रहस्य.NGROK_AUTH_TOKEN }}
+    - नाम: TS . सक्षम करें
+      रन: सेट-आइटमप्रॉपर्टी-पाथ 'HKLM:\System\CurrentControlSet\Control\Terminal Server'-name "fDenyTSConnections" -Value 0
+    - रन: सक्षम-नेटफ़ायरवॉल नियम-डिस्प्लेग्रुप "रिमोट डेस्कटॉप"
+    - रन: सेट-आइटमप्रॉपर्टी-पथ 'HKLM:\System\CurrentControlSet\Control\Terminal Server\WinStations\RDP-Tcp' -name "UserAuthentication" -Value 1
+    - रन: सेट-लोकल यूज़र-नाम "रनरएडमिन" -पासवर्ड (कन्वर्ट-सिक्योरस्ट्रिंग-एस्प्लेनटेक्स्ट "पी@ssw0rd!" -फोर्स)
+    - नाम: सुरंग बनाएं
+      रन: .\ngrok\ngrok.exe tcp 3389
